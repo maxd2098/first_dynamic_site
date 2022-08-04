@@ -2,33 +2,65 @@
 
 include SITE_ROOT . "/app/database/db.php";
 
-$errMsg = '';
+if (!$_SESSION) {
+    header("location: " . BASE_URL . 'log.php');
+}
+
+$errMsg = [];
 $id = '';
 $title = '';
 $img = '';
 $content = '';
 $topic = '';
-$topics = selectAll('topics');
 
+$topics = selectAll('topics');
+$posts = selectAll('posts');
+$postsAdm = selectAllFromPostsWithUsers('posts', 'users');
+
+//tt($postsAdm);
 
 // форма создания записи
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_post'])) {
     
+    if (!empty($_FILES['img']['name'])) {
+        $imgName = time() . "_" . $_FILES['img']['name'];
+        $fileTmpName = $_FILES['img']['tmp_name'];
+        $fileType = $_FILES['img']['type'];
+        $fileSize = $_FILES['img']['size'];
+        $destination = ROOT_PATH . "\assets\images\posts\\" . $imgName;
+        
+        if(strpos($fileType, 'image') !== false) {
+            $result = move_uploaded_file($fileTmpName, $destination);
+            if ($result) {
+                $_POST['img'] = $imgName;
+            } else {
+                $errMsg []= "Ошибка загрузки изображения на сервер";
+            }
+        }
+        
+    } else {
+        $errMsg []= "Ошибка получения картинки";
+    }
+    
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
     $topic = trim($_POST['topic']);
+    
+    $publish = isset($_POST['publish']) ? 1 : 0;
 
     if($title === '' || $content === '' || $topic === '') {
-        $errMsg = 'Не все поля заполнены!';
-    } elseif (mb_strlen($title, 'UTF8') < 7) {
-        $errMsg = "Название статьи должно быть более 7 символов";
+        $errMsg []= 'Не все поля заполнены!';
+    } elseif (mb_strlen($title, 'UTF8') < 5) {
+        $errMsg []= "Название статьи должно быть более 5 символов";
+    } elseif(!empty($_FILES['img']['name']) && strpos($fileType, 'image') === false) {
+        $errMsg []= "Можно загружать только изображения";
     } else {
         $post = [
             'id_user' => $_SESSION['id'],
             'title' => $title,
             'img' => $_POST['img'],
             'content' => $content,
-            'status' => 1,
+            'status' => $publish,
             'id_topic' => $topic
             
         ];

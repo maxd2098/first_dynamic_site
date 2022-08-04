@@ -249,6 +249,21 @@ header ul li ul li a {
 }
 
 
+/*
+    ERROR MSG
+ */
+
+.add-post .err {
+    padding: 1rem 0;
+    color: brown;
+}
+
+.add-post .err ul {
+    list-style-type: none;
+    color: brown;
+    padding-left: 10px;
+}
+
 
 
 
