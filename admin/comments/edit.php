@@ -1,7 +1,7 @@
 <?php
 
 include "../../path.php";
-include "../../app/controllers/topics.php";
+include "../../app/controllers/commentaries.php";
 
 ?>
 
@@ -25,30 +25,35 @@ include "../../app/controllers/topics.php";
 
 <div class="container">
     <?php include "../../app/include/sidebar_admin.php"; ?>
-    <div class="posts col-9">
-        <div class="button row">
-            <a href="<?php echo BASE_URL . "admin/topics/create.php"; ?>" class="col-3 btn btn-success">Создать</a>
-            <span class="col-1"></span>
-            <a href="<?php echo BASE_URL . "admin/topics/index.php"; ?>" class="col-3 btn btn-warning">Редактировать</a>
-        </div>
+    <div class="posts col-9 freeeeeee">
         <div class="row title-table">
-            <h2>Обновление категории</h2>
+            <h2>Редактирование комментария</h2>
         </div>
         <div class="row add-post">
-            <div class="mb-3 col-12 col-md-12 err">
+            <div class="mb-12 col-12 col-md-12 err">
+                <!--                    Вывод массива с ошибками-->
                 <?php include "../../app/helps/errorinfo.php"; ?>
+            
             </div>
-            <form action="edit.php" method="post">
-                <input name="id" value="<?=$id;?>" type="hidden">
-                <div class="col">
-                    <input name="name" value="<?=$name;?>" type="text" class="form-control" placeholder="Название категории" aria-label="Название категории">
+            <form action="edit.php" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<?=$id; ?>">
+                <div class="col mb-4">
+                    <input value="<?=$email; ?>" readonly="readonly" name="title" type="text" class="form-control" placeholder="Title" aria-label="Название статьи">
                 </div>
                 <div class="col">
-                    <label for="content" class="form-label">Описание категории</label>
-                    <textarea name="description" class="form-control" id="content" rows="6"><?=$description;?></textarea>
+                    <label for="editor" class="form-label">Комментарий</label>
+                    <textarea name="content" id="editor" class="form-control" rows="6"><?=$text_get; ?></textarea>
                 </div>
-                <div class="col">
-                    <button name="topic-edit" class="btn btn-primary" type="submit">Обновить категорию</button>
+                
+                <div class="form-check">
+                    <?php if ($pub) $checked = "checked"; else $checked = ""; ?>
+                        <input name="publish" class="form-check-input" type="checkbox" id="flexCheckChecked" <?=$checked;?>>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            Publish
+                        </label>
+                </div>
+                <div class="col col-6">
+                    <button name="edit_comment" class="btn btn-primary" type="submit">Сохранить</button>
                 </div>
             </form>
         </div>
@@ -64,8 +69,10 @@ include "../../app/controllers/topics.php";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+<script src="../../assets/js/script.js"></script>
+
 
 </body>
 </html>
-
 

@@ -1,13 +1,18 @@
 <?php
-include "path.php";
-include "app/controllers/topics.php";
 
-$post = selectPostFromPostsWithUsersOnSingle('posts', 'users', $_GET['post']);
+include "path.php";
+include SITE_ROOT . "/app/database/db.php";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search-term'])) {
+    $posts = searchInTitleAndContent($_POST['search-term'], 'posts', 'users');
+}
+
+//tt($topTopic);
 
 ?>
 
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,59 +28,44 @@ $post = selectPostFromPostsWithUsersOnSingle('posts', 'users', $_GET['post']);
 
 <?php include "app/include/header.php"; ?>
 
-<!--блок карусели END-->
 <!--блок main-->
 <div class="container">
     <div class="content row">
-        <div class="main-content col-md-9 col-12">
-            <h2><?php echo $post['title']; ?></h2>
+        <div class="main-content col-12">
+            <h2>Результаты поиска публикации</h2>
+            
+            <?php foreach ($posts as $post): ?>
 
-            <div class="single_post row">
-                <div class="img col-12">
+            <div class="post row">
+                <div class="img col-12 col-md-4">
                     <img src="<?=BASE_URL . 'assets/images/posts/' . $post['img']; ?>" alt="<?=$post['title']?>" class="img-thumbnail">
                 </div>
-                <div class="info">
+                <div class="post_text col-12 col-md-8">
+                    <h3>
+                        <?php if (strlen($post['title']) > 60): ?>
+                            <a href="<?=BASE_URL . 'single.php?post=' . $post['id']; ?>"><?=mb_substr($post['title'], 0, 60, 'UTF-8') . '...'; ?></a>
+                        <?php else: ?>
+                            <a href="<?=BASE_URL . 'single.php?post=' . $post['id']; ?>"><?=$post['title']; ?></a>
+                        <?php endif; ?>
+                    </h3>
                     <i class="far fa-user"><?=$post['username']; ?></i>
                     <i class="far fa-calendar"><?=$post['created_date']; ?></i>
+                    <p class="preview-text">
+                        <?=mb_substr($post['content'], 0, 60, 'UTF-8') . '...'; ?>
+                    </p>
                 </div>
-                <div class="single_post_text col-12">
-                    <?=$post['content']; ?>
-                </div>
-<!--                ВКЛЮЧАЕМ HTML БЛОК В КОММЕНТАРИИ-->
-                <?php include "app/include/comments.php"; ?>
             </div>
+            
+            <?php endforeach; ?>
+            
 
         </div>
-        <!-- sidebar -->
-        <div class="sidebar col-md-3 col-12">
-            <div class="section search">
-                <h3>Поиск</h3>
-                <form action="/" method="post">
-                    <input type="text" name="search-term" class="text-input" placeholder="Введите слово...">
-                </form>
-            </div>
-
-            <div class="section topics">
-                <h3>Категории</h3>
-                <ul>
-                    <?php foreach ($topics as $key => $topic): ?>
-                        <li>
-                            <a href="<?=BASE_URL . 'category.php?id=' . $topic['id']; ?>"><?=$topic['name']; ?></a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-
-        </div>
-
-
-
+        
     </div>
 </div>
 
 <!--footer-->
 <?php include "app/include/footer.php"; ?>
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>

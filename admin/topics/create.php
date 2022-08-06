@@ -36,7 +36,7 @@ include "../../app/controllers/topics.php";
             </div>
             <div class="row add-post">
                 <div class="mb-3 col-12 col-md-12 err">
-                    <p><?=$errMsg;?></p>
+                    <?php include "../../app/helps/errorinfo.php"; ?>
                 </div>
                 <form action="create.php" method="post">
                     <div class="col">

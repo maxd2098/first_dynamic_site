@@ -7,11 +7,11 @@ include "app/controllers/topics.php";
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $limit = 2;
 $offset = $limit * ($page - 1);
-$total_pages = ceil(countRow('posts') / $limit);
+$total_pages = ceil(countRowPostsFromCategory('posts', $_GET['id']) / $limit);
 
-$posts = selectAllFromPostsWithUsersOnIndex('posts', 'users', $limit, $offset);
+$posts = selectAllFromPostsWithUsernameToCategory('posts', 'users', ['id_topic' => $_GET['id']], $limit, $offset);
 $topTopic = selectTopTopicsFromPost('posts');
-
+$category = selectOne('topics', ['id' => $_GET['id']]);
 //tt($total_pages);
 
 ?>
@@ -33,56 +33,11 @@ $topTopic = selectTopTopicsFromPost('posts');
 
 <?php include "app/include/header.php"; ?>
 
-<!--блок карусели START-->
-
-<div class="container">
-    <div class="row">
-        <h2 class="slider-title">Топ публикации</h2>
-    </div>
-    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-    
-            <?php foreach ($topTopic as $key => $post): ?>
-            
-                <?php if($key == 0): ?>
-                <div class="carousel-item active">
-            
-                <?php else: ?>
-                <div class="carousel-item">
-                
-                <?php endif; ?>
-                    <img src="<?=BASE_URL . 'assets/images/posts/' . $post['img']; ?>" alt="<?=$post['title']?>" class="d-block w-100">
-                    <div class="carousel-caption-hack carousel-caption d-none d-md-block">
-                        <h5><a href="">
-                                <?php if (strlen($post['title']) > 60): ?>
-                                    <a href="<?=BASE_URL . 'single.php?post=' . $post['id']; ?>"><?=mb_substr($post['title'], 0, 60, 'UTF-8') . '...'; ?></a>
-                                <?php else: ?>
-                                    <a href="<?=BASE_URL . 'single.php?post=' . $post['id']; ?>"><?=$post['title']; ?></a>
-                                <?php endif; ?>
-                            </a></h5>
-                    </div>
-                </div>
-            
-            <?php endforeach; ?>
-            
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Предыдущий</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Следующий</span>
-        </button>
-    </div>
-</div>
-<!--блок карусели END-->
-
 <!--блок main-->
 <div class="container">
     <div class="content row">
         <div class="main-content col-md-9 col-12">
-            <h2>Последние публикации</h2>
+            <h2>Статьи с раздела <strong><?=$category['name']; ?></strong></h2>
             
             <?php foreach ($posts as $post): ?>
 
@@ -108,8 +63,8 @@ $topTopic = selectTopTopicsFromPost('posts');
             
             <?php endforeach; ?>
             <!-- подключение пагинации-->
-            <?php include("app/include/pagination.php"); ?>
             
+            <?php if(count($posts) > 0)include("app/include/pagination_category.php"); ?>
 
         </div>
         <!-- sidebar -->

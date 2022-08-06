@@ -1,7 +1,7 @@
 <?php
 
 include "../../path.php";
-include "../../app/controllers/posts.php";
+include "../../app/controllers/commentaries.php";
 
 ?>
 
@@ -26,36 +26,41 @@ include "../../app/controllers/posts.php";
 <div class="container">
     <?php include "../../app/include/sidebar_admin.php"; ?>
         <div class="posts col-9">
-            <div class="button row">
-                <a href="<?php echo BASE_URL . "admin/posts/create.php"; ?>" class="col-3 btn btn-success">Создать</a>
-                <span class="col-1"></span>
-                <a href="<?php echo BASE_URL . "admin/posts/index.php"; ?>" class="col-3 btn btn-warning">Редактировать</a>
-            </div>
             <div class="row title-table">
-                <h2>Управление записями</h2>
+                <h2>Управление комментариями</h2>
+                <div class="mb-12 col-12 col-md-12 err">
+                    <p></p>
+                </div>
                 <div class="col-1">ID</div>
-                <div class="col-5">Название</div>
+                <div class="col-5">Текст</div>
                 <div class="col-2">Автор</div>
                 <div class="col-4">Управление</div>
             </div>
             
-            <?php foreach($postsAdm as $key => $post): ?>
+            <?php foreach($commentsForAdm as $key => $comment): ?>
             <div class="row post">
-                <div class="id col-1"><?=$key + 1; ?></div>
+                <div class="id col-1"><?=$comment['id']; ?></div>
                 <div class="title col-5">
-                    <?php if (strlen($post['title']) > 40): ?>
-                        <?=mb_substr($post['title'], 0, 40, 'UTF-8') . '...'; ?>
+                    <?php if (strlen($comment['comment']) > 40): ?>
+                        <?=mb_substr($comment['comment'], 0, 40, 'UTF-8') . '...'; ?>
                     <?php else: ?>
-                        <?=$post['title']; ?>
+                        <?=$comment['comment']; ?>
                     <?php endif; ?>
                 </div>
-                <div class="author col-2"><?=$post['username']; ?></div>
-                <div class="red col-1"><a href="edit.php?id=<?=$post['id']; ?>">edit</a></div>
-                <div class="del col-1"><a href="edit.php?delete_id=<?=$post['id']; ?>">delete</a></div>
-                <?php if($post['status']): ?>
-                    <div class="status col-2"><a href="edit.php?publish=0&pub_id=<?=$post['id']; ?>">unpublish</a></div>
+                <?php
+                    
+                    $user = $comment['email'];
+                    $user = explode('@', $user);
+                    $user = $user[0];
+                
+                ?>
+                <div class="author col-3"><?=$user . '@'; ?></div>
+                <div class="red col-1"><a href="edit.php?id=<?=$comment['id']; ?>">edit</a></div>
+                <div class="del col-1"><a href="edit.php?delete_id=<?=$comment['id']; ?>">delete</a></div>
+                <?php if($comment['status']): ?>
+                    <div class="status col-1"><a href="edit.php?publish=0&pub_id=<?=$comment['id']; ?>">unpublish</a></div>
                 <?php else: ?>
-                    <div class="status col-2"><a href="edit.php?publish=1&pub_id=<?=$post['id']; ?>">publish</a></div>
+                    <div class="status col-1"><a href="edit.php?publish=1&pub_id=<?=$comment['id']; ?>">publish</a></div>
                 <?php endif; ?>
                 
             </div>

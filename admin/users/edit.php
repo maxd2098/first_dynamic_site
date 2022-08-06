@@ -1,7 +1,7 @@
 <?php
 
 include "../../path.php";
-include "../../app/controllers/topics.php";
+include "../../app/controllers/users.php";
 
 ?>
 
@@ -13,10 +13,10 @@ include "../../app/controllers/topics.php";
     <title>My site</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/90241b67b0.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../../assets/css/admin.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/admin.css">
 </head>
 <body>
 
@@ -27,12 +27,12 @@ include "../../app/controllers/topics.php";
     <?php include "../../app/include/sidebar_admin.php"; ?>
     <div class="posts col-9">
         <div class="button row">
-            <a href="<?php echo BASE_URL . "admin/topics/create.php"; ?>" class="col-3 btn btn-success">Создать</a>
+            <a href="<?php echo BASE_URL . "admin/users/create.php"; ?>" class="col-3 btn btn-success">Создать</a>
             <span class="col-1"></span>
-            <a href="<?php echo BASE_URL . "admin/topics/index.php"; ?>" class="col-3 btn btn-warning">Редактировать</a>
+            <a href="<?php echo BASE_URL . "admin/users/index.php"; ?>" class="col-3 btn btn-warning">Редактировать</a>
         </div>
         <div class="row title-table">
-            <h2>Обновление категории</h2>
+            <h2>Редактирование пользователя</h2>
         </div>
         <div class="row add-post">
             <div class="mb-3 col-12 col-md-12 err">
@@ -40,15 +40,32 @@ include "../../app/controllers/topics.php";
             </div>
             <form action="edit.php" method="post">
                 <input name="id" value="<?=$id;?>" type="hidden">
+                <div class="w-100"></div>
                 <div class="col">
-                    <input name="name" value="<?=$name;?>" type="text" class="form-control" placeholder="Название категории" aria-label="Название категории">
+                    <label for="formGroupExampleInput" class="form-label">Логин</label>
+                    <input name="login" value="<?=$username;?>" type="text" class="form-control" id="formGroupExampleInput" placeholder="Введите ваш логин">
                 </div>
+                <div class="w-100"></div>
                 <div class="col">
-                    <label for="content" class="form-label">Описание категории</label>
-                    <textarea name="description" class="form-control" id="content" rows="6"><?=$description;?></textarea>
+                    <label for="exampleInputEmail1" class="form-label">Адрес электронной почты</label>
+                    <input name="mail" value="<?=$email;?>" type="email" class="form-control" readonly id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Введите ваш email">
                 </div>
+                <div class="w-100"></div>
                 <div class="col">
-                    <button name="topic-edit" class="btn btn-primary" type="submit">Обновить категорию</button>
+                    <label for="exampleInputPassword1" class="form-label">Сбросить пароль</label>
+                    <input name="pass-first" type="password" class="form-control" id="exampleInputPassword1" placeholder="Введите ваш пароль">
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <label for="exampleInputPassword2" class="form-label">Повторите пароль</label>
+                    <input name="pass-second" type="password" class="form-control" id="exampleInputPassword2" placeholder="Повторите ваш пароль">
+                </div>
+                <input name="admin" class="form-check-input" type="checkbox" value="1" id="flexCheckChecked">
+                <label class="form-check-label" for="flexCheckChecked">
+                    Админ?
+                </label>
+                <div class="col">
+                    <button name="update-user" class="btn btn-primary" type="submit">Сохранить запись</button>
                 </div>
             </form>
         </div>
@@ -67,5 +84,6 @@ include "../../app/controllers/topics.php";
 
 </body>
 </html>
+
 
 
